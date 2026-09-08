@@ -6,7 +6,6 @@
   <title>DRMIS - Region XI</title>
   
   <style>
-    /* Reset & Full Screen */
     * {
       margin: 0;
       padding: 0;
@@ -21,7 +20,6 @@
       -webkit-tap-highlight-color: transparent;
     }
     
-    /* Iframe Styling */
     #drmis-iframe {
       position: fixed;
       top: 0;
@@ -32,7 +30,6 @@
       background: white;
     }
     
-    /* Loading Spinner */
     .loading {
       position: fixed;
       top: 50%;
@@ -59,7 +56,6 @@
       100% { transform: rotate(360deg); }
     }
     
-    /* Mobile Full-Screen Button */
     .fullscreen-btn {
       position: fixed;
       bottom: 20px;
@@ -75,7 +71,7 @@
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       transition: all 0.3s ease;
-      display: none; /* Hidden by default, shown on mobile */
+      display: none;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
     }
@@ -89,14 +85,12 @@
       transform: scale(0.95);
     }
     
-    /* Show button only on mobile/tablet */
     @media (max-width: 768px) {
       .fullscreen-btn {
         display: block;
       }
     }
     
-    /* Fallback message for very old devices */
     .fallback-message {
       display: none;
       position: fixed;
@@ -127,139 +121,89 @@
 </head>
 <body>
   
-  <!-- Loading Indicator -->
   <div class="loading" id="loading">
     <div class="spinner"></div>
     <p>Loading DRMIS System...</p>
   </div>
 
-  <!-- The IFrame -->
+  <!-- UPDATED: New Apps Script URL -->
   <iframe 
     id="drmis-iframe"
-    src="https://script.google.com/macros/s/AKfycbwV-eQRfuUrZMYDZSAMSolkXyKqbCfOi01iTP_7cR2UbfDiEMlVQk6z1UmOtBJlZtPc/exec"
+    src="https://script.google.com/macros/s/AKfycbw4M2b2krvGaPwDbjPKCZm-qPPjpimJi5VwVX4kYjC0WRwQ4B8hzNtwseYkNYnYYxBO/exec"
     allowfullscreen="true"
     loading="lazy"
     title="DRMIS - Region XI Document Records Management Information System"
     sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
   </iframe>
 
-  <!-- Mobile Full-Screen Button -->
   <button class="fullscreen-btn" id="fullscreenBtn" aria-label="Toggle Full Screen">
     ⛶
   </button>
 
-  <!-- Fallback for very old browsers -->
   <div class="fallback-message" id="fallbackMessage">
     <p style="font-size: 18px; margin-bottom: 8px;">📱</p>
     <p><strong>DRMIS System</strong></p>
     <p style="color: #666; font-size: 14px; margin: 8px 0;">Your browser may not support IFrames.</p>
+    <!-- UPDATED: New Apps Script URL -->
     <a href="https://script.google.com/macros/s/AKfycbw4M2b2krvGaPwDbjPKCZm-qPPjpimJi5VwVX4kYjC0WRwQ4B8hzNtwseYkNYnYYxBO/exec" target="_blank">Open directly</a>
   </div>
 
   <script>
-    // ==========================================
-    // MOBILE-OPTIMIZED SCRIPT
-    // ==========================================
-    
     const iframe = document.getElementById('drmis-iframe');
     const loading = document.getElementById('loading');
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     const fallbackMessage = document.getElementById('fallbackMessage');
     
-    // Check if browser supports IFrames
-    function checkIframeSupport() {
-      try {
-        // Modern browsers support IFrames
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }
-    
-    // Hide loading spinner once iframe loads
     iframe.addEventListener('load', function() {
       loading.style.display = 'none';
       console.log('✅ DRMIS loaded successfully');
     });
     
-    // Handle iframe loading errors
     iframe.addEventListener('error', function() {
       loading.style.display = 'none';
       fallbackMessage.style.display = 'block';
       console.error('❌ Failed to load DRMIS');
     });
     
-    // ==========================================
-    // FULL-SCREEN FUNCTION (Works on Mobile)
-    // ==========================================
-    
     function toggleFullscreen() {
       if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-        // Request fullscreen
         if (document.documentElement.requestFullscreen) {
           document.documentElement.requestFullscreen()
-            .then(function() {
-              console.log('✅ Fullscreen enabled');
-              fullscreenBtn.textContent = '⛶'; // Toggle icon
-            })
             .catch(function(err) {
-              console.log('❌ Fullscreen error:', err.message);
-              // Fallback: Try to fullscreen the iframe instead
+              console.log('Fullscreen error:', err.message);
               if (iframe.requestFullscreen) {
-                iframe.requestFullscreen()
-                  .catch(function(e) {
-                    console.log('IFrame fullscreen failed:', e.message);
-                  });
+                iframe.requestFullscreen().catch(function(e) {
+                  console.log('IFrame fullscreen failed:', e.message);
+                });
               }
             });
         } else if (document.documentElement.webkitRequestFullscreen) {
-          // Safari fallback
           document.documentElement.webkitRequestFullscreen();
         }
       } else {
-        // Exit fullscreen
         if (document.exitFullscreen) {
-          document.exitFullscreen()
-            .catch(function(err) {
-              console.log('❌ Exit fullscreen error:', err.message);
-            });
+          document.exitFullscreen().catch(function(err) {
+            console.log('Exit fullscreen error:', err.message);
+          });
         } else if (document.webkitExitFullscreen) {
           document.webkitExitFullscreen();
         }
       }
     }
     
-    // ==========================================
-    // EVENT LISTENERS
-    // ==========================================
-    
-    // Mobile button click (touch-friendly)
     fullscreenBtn.addEventListener('click', toggleFullscreen);
     fullscreenBtn.addEventListener('touchstart', function(e) {
-      e.preventDefault(); // Prevent double-tap zoom
+      e.preventDefault();
     }, { passive: false });
     
-    // Keyboard shortcut (desktop)
     document.addEventListener('keydown', function(e) {
       if (e.key === 'F11') {
         e.preventDefault();
         toggleFullscreen();
       }
-      // Alt+Enter also works
-      if (e.key === 'Enter' && e.altKey) {
-        e.preventDefault();
-        toggleFullscreen();
-      }
     });
     
-    // ==========================================
-    // AUTO-FULLSCREEN (Only on first load)
-    // ==========================================
-    
-    // Try auto-fullscreen after iframe loads (only on desktop)
-    // Mobile browsers block this, so we use the button instead
     iframe.addEventListener('load', function() {
-      // Check if it's a desktop device (screen width > 768px)
       if (window.innerWidth > 768) {
         setTimeout(function() {
           if (!document.fullscreenElement && !document.webkitFullscreenElement) {
@@ -269,23 +213,9 @@
       }
     });
     
-    // ==========================================
-    // LOGGING
-    // ==========================================
-    
     console.log('🚀 DRMIS loaded via GitHub Pages');
     console.log('📎 Iframe URL:', iframe.src);
     console.log('📱 Mobile optimized version');
-    console.log('ℹ️ Use the ⛶ button for fullscreen on mobile');
-    
-    // Log when fullscreen changes
-    document.addEventListener('fullscreenchange', function() {
-      if (document.fullscreenElement) {
-        console.log('🔲 Fullscreen enabled');
-      } else {
-        console.log('🔳 Fullscreen disabled');
-      }
-    });
   </script>
 </body>
 </html>
