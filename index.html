@@ -126,14 +126,17 @@
     <p>Loading DRMIS System...</p>
   </div>
 
-  <!-- ✅ FIXED: Added allow-top-navigation-by-user-activation -->
+  <!-- ✅ FIXED: Added allow-downloads and allow-popups-to-escape-sandbox
+       so Drive files served from inside the DRMIS preview modal can be
+       downloaded or printed (they open in a top-level tab outside the sandbox). -->
   <iframe 
     id="drmis-iframe"
     src="https://script.google.com/macros/s/AKfycbw4M2b2krvGaPwDbjPKCZm-qPPjpimJi5VwVX4kYjC0WRwQ4B8hzNtwseYkNYnYYxBO/exec"
     allowfullscreen="true"
+    allow="fullscreen; clipboard-write; clipboard-read"
     loading="lazy"
     title="DRMIS - Region XI Document Records Management Information System"
-    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-top-navigation-by-user-activation">
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads allow-top-navigation-by-user-activation">
   </iframe>
 
   <button class="fullscreen-btn" id="fullscreenBtn" aria-label="Toggle Full Screen">
